@@ -1,0 +1,170 @@
+:root {
+  --green: #1db954;
+  --dark: #121212;
+  --light: #f0f0f0;
+  --gray: #2a2a2a;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(to right top, #1db954, #0d3e30);
+  color: var(--light);
+  padding: 2rem 1rem;
+  overflow-x: hidden;
+}
+
+.container {
+  max-width: 1000px;
+  margin: auto;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+h1 {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+
+textarea {
+  width: 100%;
+  height: 150px;
+  padding: 1rem;
+  margin: 1rem 0;
+  font-size: 1rem;
+  border: none;
+  border-radius: 15px;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--light);
+}
+
+textarea::placeholder {
+  color: #ccc;
+}
+
+button {
+  background: var(--light);
+  color: var(--dark);
+  border: none;
+  font-size: 1rem;
+  padding: 0.8rem 2rem;
+  border-radius: 30px;
+  cursor: pointer;
+  margin-bottom: 2rem;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+/* button:hover {
+  background: #ffffffcc;
+} */
+
+.output {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.5rem;
+}
+
+section {
+  padding: 1rem;
+  border-radius: 15px;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+h2 {
+  margin-bottom: 0.75rem;
+  font-size: 1.25rem;
+  color: var(--light);
+}
+
+ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+li {
+  background: rgba(255, 255, 255, 0.1);
+  margin-bottom: 0.5rem;
+  padding: 0.6rem 0.75rem;
+  border-radius: 12px;
+  word-break: break-word;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.copy-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  align-self: flex-end;
+  padding: 0;
+  margin: 0;
+}
+
+.copy-btn img {
+  width: 20px;
+  height: 20px;
+  filter: brightness(100%);
+}
+
+footer {
+  margin-top: 3rem;
+  text-align: center;
+  color: #ddd;
+  padding-bottom: 2rem;
+}
+
+footer .social {
+  margin-top: 0.5rem;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+footer .social a {
+  display: inline-block;
+}
+
+footer .social img {
+  width: 30px;
+  height: 30px;
+  filter: brightness(100%);
+  transition: 0.3s;
+}
+
+footer .social img:hover {
+  transform: scale(1.1);
+  filter: brightness(120%);
+}
+
+html, body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+@media (max-width: 600px) {
+  h1 {
+    font-size: 2rem;
+  }
+
+  .output {
+    grid-template-columns: 1fr;
+  }
+
+  footer .social img {
+    width: 26px;
+    height: 26px;
+  }
+}

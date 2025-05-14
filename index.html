@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>QuickLook – Text Extractor</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="container">
+    <header>
+      <h1>🔍 QuickLook</h1>
+      <p>Extract links, emails, phone numbers, and keywords from any text.</p>
+    </header>
+
+    <textarea id="inputText" placeholder="Paste or type text here..."></textarea>
+    <button onclick="extractText()">Extract Info</button>
+
+    <div class="output">
+      <section id="links">
+        <h2>🔗 Links</h2>
+        <ul></ul>
+      </section>
+      <section id="emails">
+        <h2>📧 Emails</h2>
+        <ul></ul>
+      </section>
+      <section id="phones">
+        <h2>📞 Phone Numbers</h2>
+        <ul></ul>
+      </section>
+      <section id="keywords">
+        <h2>📄 Top Keywords</h2>
+        <ul></ul>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <p>Made by <strong>Bijan Murmu</strong></p>
+    <div class="social">
+      <a href="https://github.com/BijanMurmu" target="_blank" title="GitHub">
+        <img src="assets/github.png" alt="GitHub logo" />
+      </a>
+      <a href="https://linkedin.com/in/bijanmurmu" target="_blank" title="LinkedIn">
+        <img src="assets/linkedin.png" alt="LinkedIn logo" />
+      </a>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
