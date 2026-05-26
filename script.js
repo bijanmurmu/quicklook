@@ -247,6 +247,7 @@ window.extractText = extractText;
 window.clearAll = clearAll;
 window.exportJSON = exportJSON;
 window.exportCSV = exportCSV;
+window.copySection = copySection;
 
 // Accordion behavior for result sections (mobile-first)
 function initAccordions() {
@@ -258,7 +259,7 @@ function initAccordions() {
     if (!header.querySelector('.chev')) {
       const chev = document.createElement('span');
       chev.className = 'chev';
-      chev.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linej[...]';
+      chev.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linej[...]
       header.appendChild(chev);
     }
     header.setAttribute('role', 'button');
