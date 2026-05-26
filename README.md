@@ -21,6 +21,11 @@ Paste any text, and instantly extract the essentials!
 - **Responsive UI:** Clean, modern interface that works on any device.
 - **No Dependencies:** Pure HTML, CSS, and JavaScript—no frameworks required.
 
+New in this version:
+- **Export:** Download results as JSON or CSV.
+- **Clear:** Quickly clear input and results.
+- **Accessibility:** ARIA attributes, keyboard support (Ctrl/Cmd+Enter to extract), and improved focus management.
+
 ---
 
 ## 🛠️ Getting Started
@@ -34,7 +39,35 @@ cd quicklook
 
 ### 2. Open the App
 
-Just open `index.html` in your browser—no build steps or server needed!
+Just open `index.html` in your browser—no build steps or server needed.
+
+### Developer setup (Phase B)
+
+1. Install dev dependencies:
+
+```bash
+npm install
+```
+
+2. Run tests:
+
+```bash
+npm test
+```
+
+3. Start a quick local server (uses `http-server` via `npx`):
+
+```bash
+npm start
+# then open http://127.0.0.1:5500/
+```
+
+4. Lint and format:
+
+```bash
+npm run lint
+npm run format
+```
 
 ---
 
