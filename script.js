@@ -329,31 +329,6 @@ function updateCounter() {
   if (wordEl) wordEl.textContent = text.trim() ? text.trim().split(/\s+/).length : 0;
 }
 
-// ── Theme Toggle ────────────────────────────────────────────────────────
-
-function initTheme() {
-  const saved = localStorage.getItem('quicklook-theme') || 'dark';
-  document.documentElement.setAttribute('data-theme', saved);
-  updateThemeIcon(saved);
-}
-
-function toggleTheme() {
-  const current = document.documentElement.getAttribute('data-theme') || 'dark';
-  const next = current === 'dark' ? 'light' : 'dark';
-  document.documentElement.setAttribute('data-theme', next);
-  localStorage.setItem('quicklook-theme', next);
-  updateThemeIcon(next);
-  showToast(next === 'light' ? '☀️ Light mode' : '🌙 Dark mode');
-}
-
-function updateThemeIcon(theme) {
-  const sunIcon  = document.getElementById('themeIconSun');
-  const moonIcon = document.getElementById('themeIconMoon');
-  if (sunIcon && moonIcon) {
-    sunIcon.style.display  = theme === 'dark' ? 'none' : 'block';
-    moonIcon.style.display = theme === 'dark' ? 'block' : 'none';
-  }
-}
 
 // ── Drag & Drop ─────────────────────────────────────────────────────────
 
@@ -694,13 +669,11 @@ window.clearAll       = clearAll;
 window.exportJSON     = exportJSON;
 window.exportCSV      = exportCSV;
 window.copySection    = copySection;
-window.toggleTheme    = toggleTheme;
 window.toggleFormatting = toggleFormatting;
 
 // ── Initialize ──────────────────────────────────────────────────────────
 
 function init() {
-  initTheme();
   initAccordions();
   initDragDrop();
   initAutoExtract();

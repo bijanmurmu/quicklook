@@ -35,28 +35,6 @@
   --transition-slow: 0.4s ease;
 }
 
-/* --- Light Theme --- */
-[data-theme="light"] {
-  --bg-0: #f0f4f8;
-  --bg-1: #e2efe8;
-  --surface: rgba(0, 0, 0, 0.03);
-  --surface-hover: rgba(0, 0, 0, 0.06);
-  --card-border: rgba(0, 0, 0, 0.08);
-  --card-glow: rgba(29, 185, 84, 0.12);
-  --accent: #15873e;
-  --accent-2: #0d7c73;
-  --accent-glow: rgba(21, 135, 62, 0.25);
-  --text: #1a2e23;
-  --text-muted: #4a6b5a;
-  --text-dim: rgba(0, 0, 0, 0.35);
-  --toast-bg: rgba(21, 135, 62, 0.95);
-  --toast-text: #ffffff;
-  --overlay-bg: rgba(240, 244, 248, 0.9);
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
-  --shadow-md: 0 6px 18px rgba(0, 0, 0, 0.08);
-  --shadow-lg: 0 12px 36px rgba(0, 0, 0, 0.12);
-  --shadow-glow: 0 0 20px var(--accent-glow);
-}
 
 /* --- Reset & Base --- */
 *,
