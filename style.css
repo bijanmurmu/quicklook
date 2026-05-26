@@ -167,23 +167,59 @@ body {
   transition: transform var(--transition-med);
 }
 
-/* --- Textarea --- */
-textarea {
+/* --- Textarea Wrapper & Live Highlight Backdrop --- */
+.textarea-wrapper {
+  position: relative;
+  margin: 1rem 0 0.5rem 0;
+}
+
+.highlight-backdrop {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  z-index: 0;
+}
+
+.highlight-content {
   width: 100%;
   min-height: 160px;
   padding: 1.1rem 1.2rem;
-  margin: 1rem 0 0.5rem 0;
+  font-family: var(--font-main);
+  font-size: 1rem;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow: hidden;
+  color: transparent; /* text is invisible — only marks show */
+}
+
+/* Highlight color classes */
+mark.hl-link    { background: rgba(59, 130, 246, 0.22); border-radius: 3px; color: transparent; }
+mark.hl-email   { background: rgba(239, 68, 68, 0.22);  border-radius: 3px; color: transparent; }
+mark.hl-hashtag { background: rgba(34, 197, 94, 0.22);  border-radius: 3px; color: transparent; }
+mark.hl-social  { background: rgba(168, 85, 247, 0.22); border-radius: 3px; color: transparent; }
+
+/* --- Textarea (on top of backdrop) --- */
+textarea {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  min-height: 160px;
+  padding: 1.1rem 1.2rem;
   font-family: var(--font-main);
   font-size: 1rem;
   line-height: 1.6;
   border: 1px solid var(--card-border);
   border-radius: var(--radius-md);
-  background: var(--surface);
+  background: transparent; /* show backdrop through */
   color: var(--text);
   box-shadow: var(--shadow-md);
   backdrop-filter: blur(8px);
   transition: box-shadow var(--transition-med), transform var(--transition-fast), border-color var(--transition-med);
   resize: vertical;
+  caret-color: var(--accent);
 }
 
 textarea:focus {
@@ -861,4 +897,170 @@ body.is-extension-popup .container {
   border-radius: 0;
   box-shadow: none;
   min-height: 100%;
+}
+
+/* ========================================================================
+   Phase 4 — Formatting Toggle Active State
+   ======================================================================== */
+.control-btn.active {
+  background: var(--accent);
+  color: #04251a;
+  border-color: var(--accent);
+  box-shadow: 0 0 12px var(--accent-glow);
+}
+
+.control-btn.active:hover {
+  background: var(--accent-2);
+  border-color: var(--accent-2);
+}
+
+/* ========================================================================
+   Phase 3 — Named Entities (NER) Section
+   ======================================================================== */
+.entities-section {
+  grid-column: 1 / -1; /* full width across the grid */
+}
+
+.ner-hint {
+  font-size: 0.82rem;
+  color: var(--text-dim);
+  margin: 0 0 1rem 0;
+  line-height: 1.5;
+}
+
+.ner-run-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color: #04251a;
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 5px 14px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
+  white-space: nowrap;
+  box-shadow: 0 2px 8px var(--accent-glow);
+}
+
+.ner-run-btn:hover {
+  opacity: 0.88;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px var(--accent-glow);
+}
+
+.ner-run-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.ner-run-btn i {
+  width: 14px;
+  height: 14px;
+}
+
+/* NER Status Bar */
+.ner-status-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 0.75rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.ner-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--card-border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* NER Progress */
+.ner-progress-wrap {
+  height: 4px;
+  background: var(--card-border);
+  border-radius: 99px;
+  margin-bottom: 1rem;
+  overflow: hidden;
+}
+
+.ner-progress-bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  border-radius: 99px;
+  transition: width 0.3s ease;
+}
+
+/* Entity Group Grid */
+.entity-groups {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.entity-group {
+  background: var(--surface-hover);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-sm);
+  padding: 0.75rem 1rem;
+}
+
+.entity-group-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  margin-bottom: 0.6rem;
+}
+
+.entity-group-label i {
+  width: 14px;
+  height: 14px;
+}
+
+.entity-group ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 0;
+  margin: 0;
+}
+
+.entity-group li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 0.9rem;
+  color: var(--text);
+  background: none;
+  padding: 4px 2px;
+  border-radius: 4px;
+  animation: popIn 0.2s ease backwards;
+  border: none;
+  box-shadow: none;
+}
+
+.entity-group li:hover {
+  background: var(--surface-hover);
+  transform: none;
+  box-shadow: none;
 }

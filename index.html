@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+
   <!-- Drag & Drop Overlay -->
   <div class="drop-overlay" id="dropOverlay">
     <div class="drop-border">
@@ -29,7 +30,7 @@
   <main class="container">
     <header class="site-header">
       <h1 class="brand">QuickLook</h1>
-      <p class="tagline">Extract links, emails, phone numbers, hashtags, and keywords from any text.</p>
+      <p class="tagline">Extract links, emails, phones, hashtags, social profiles & named entities — all in your browser.</p>
       <div class="header-controls">
         <button id="themeToggle" class="theme-toggle" type="button" title="Toggle theme" aria-label="Toggle dark/light theme">
           <span id="themeIconSun" style="display:none"><i data-lucide="sun"></i></span>
@@ -38,8 +39,14 @@
       </div>
     </header>
 
+    <!-- Textarea with highlight backdrop -->
     <label for="inputText" class="visually-hidden">Input text to extract from</label>
-    <textarea id="inputText" placeholder="Paste or type text here… or drag & drop a file" aria-label="Paste or type text here"></textarea>
+    <div class="textarea-wrapper">
+      <div class="highlight-backdrop" id="highlightBackdrop">
+        <div class="highlight-content" id="highlightContent"></div>
+      </div>
+      <textarea id="inputText" placeholder="Paste or type text here… or drag & drop a file" aria-label="Paste or type text here"></textarea>
+    </div>
 
     <div class="counter-bar">
       <div class="counts">
@@ -61,6 +68,10 @@
         <button id="clearBtn" class="control-btn" onclick="clearAll()">
           <span class="icon"><i data-lucide="trash-2"></i></span>
           <span class="label">Clear</span>
+        </button>
+        <button id="formatToggleBtn" class="control-btn" onclick="toggleFormatting()" title="Standardize extracted data formats">
+          <span class="icon"><i data-lucide="wand-2"></i></span>
+          <span class="label">Format</span>
         </button>
         <div class="spacer"></div>
         <button id="exportJsonBtn" class="control-btn" onclick="exportJSON()">
@@ -148,6 +159,43 @@
         </h2>
         <ul></ul>
       </section>
+
+      <!-- Named Entities (Phase 3 — NLP) -->
+      <section id="entities" class="result-section entities-section">
+        <h2 class="section-header">
+          <span class="section-icon"><i data-lucide="brain"></i></span>
+          <span class="title">Named Entities</span>
+          <span class="count" aria-hidden="true"></span>
+          <div class="section-controls">
+            <button class="ner-run-btn" id="nerRunBtn" title="Run AI-powered entity recognition (downloads model on first use)">
+              <i data-lucide="sparkles"></i> Analyse
+            </button>
+          </div>
+        </h2>
+        <p class="ner-hint">Extracts People, Organizations & Locations using an in-browser AI model. Runs 100% locally.</p>
+        <div class="ner-status-bar" id="nerStatusBar" style="display:none">
+          <div class="ner-spinner"></div>
+          <span id="nerStatusText"></span>
+        </div>
+        <div class="ner-progress-wrap" id="nerProgressWrap" style="display:none">
+          <div class="ner-progress-bar" id="nerProgressBar"></div>
+        </div>
+        <div class="entity-groups">
+          <div class="entity-group" id="ner-people">
+            <div class="entity-group-label"><i data-lucide="user"></i> People</div>
+            <ul></ul>
+          </div>
+          <div class="entity-group" id="ner-orgs">
+            <div class="entity-group-label"><i data-lucide="building-2"></i> Organizations</div>
+            <ul></ul>
+          </div>
+          <div class="entity-group" id="ner-locs">
+            <div class="entity-group-label"><i data-lucide="map-pin"></i> Locations</div>
+            <ul></ul>
+          </div>
+        </div>
+      </section>
+
     </div>
   </main>
 

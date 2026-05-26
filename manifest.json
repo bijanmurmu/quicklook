@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "QuickLook Extractor",
-  "version": "0.1.0",
-  "description": "Instantly extract links, emails, phone numbers, hashtags, and keywords from any text.",
+  "version": "0.3.0",
+  "description": "Instantly extract links, emails, phones, hashtags, social profiles & named entities from any text. Runs 100% in-browser — zero backend, zero tracking.",
   "permissions": ["contextMenus", "storage"],
   "background": {
     "service_worker": "background.js"
@@ -20,5 +20,19 @@
     "16": "assets/quicklook-icon.png",
     "48": "assets/quicklook-icon.png",
     "128": "assets/quicklook-icon.png"
-  }
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self';"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "vendor/transformers.min.js",
+        "vendor/lucide.min.js",
+        "vendor/libphonenumber-min.js",
+        "ner-worker.js"
+      ],
+      "matches": ["<all_urls>"]
+    }
+  ]
 }

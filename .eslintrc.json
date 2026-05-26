@@ -13,5 +13,10 @@
   "rules": {
     "no-unused-vars": ["warn"],
     "no-console": ["off"]
+  },
+  "globals": {
+    "chrome": "readonly",
+    "libphonenumber": "readonly",
+    "lucide": "readonly"
   }
 }

@@ -6,6 +6,8 @@
   "scripts": {
     "start": "npx http-server -c-1 -p 5500",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "vendor:build": "node -e \"const fs=require('fs'),https=require('https'),path=require('path'); fs.mkdirSync('vendor',{recursive:true}); const nm=[['node_modules/@xenova/transformers/dist/transformers.min.js','vendor/transformers.min.js'],['node_modules/libphonenumber-js/bundle/libphonenumber-min.js','vendor/libphonenumber-min.js']]; nm.forEach(([s,d])=>{try{fs.copyFileSync(s,d);console.log('Copied '+d);}catch(e){console.error('FAIL '+s+': '+e.message);}}); const lucide='vendor/lucide.min.js'; if(!fs.existsSync(lucide)){console.log('Downloading lucide...'); const f=fs.createWriteStream(lucide); https.get('https://unpkg.com/lucide@latest/dist/umd/lucide.min.js',r=>{r.pipe(f);f.on('finish',()=>{f.close();console.log('Downloaded lucide.min.js');});});} else{console.log('lucide.min.js already exists, skipping.');}\"",
+    "postinstall": "npm run vendor:build",
     "lint": "eslint . --ext .js",
     "format": "prettier --write '**/*.{js,css,html,json,md}'"
   },
@@ -26,6 +28,7 @@
     "prettier": "^2.0.0"
   },
   "dependencies": {
+    "@xenova/transformers": "^2.17.2",
     "libphonenumber-js": "^1.13.3"
   }
 }

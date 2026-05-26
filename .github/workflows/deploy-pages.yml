@@ -13,13 +13,27 @@ jobs:
       id-token: write
     steps:
       - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies & build vendor
+        run: |
+          npm ci
+          npm run vendor:build
+
       - name: Prepare deployment
         run: |
-          mkdir -p _site
-          cp index.html style.css script.js _site/
-          cp -r assets _site/
+          mkdir -p _site/vendor _site/assets
+          cp index.html style.css script.js background.js manifest.json ner-worker.js _site/
+          cp -r assets/. _site/assets/
+          cp vendor/lucide.min.js vendor/libphonenumber-min.js vendor/transformers.min.js _site/vendor/
+          touch _site/.nojekyll
+
       - name: Upload artifact for GitHub Pages
-        uses: actions/upload-pages-artifact@v1
+        uses: actions/upload-pages-artifact@v3
         with:
           path: ./_site
 
@@ -31,7 +45,8 @@ jobs:
       id-token: write
     environment:
       name: github-pages
-      url: ${{ github.event.deployment.payload.web_url }}
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Deploy to GitHub Pages
-        uses: actions/deploy-pages@v1
+        id: deployment
+        uses: actions/deploy-pages@v4
