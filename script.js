@@ -28,7 +28,7 @@ function getTopKeywords(text, limit = 10) {
 function extractLib(text) {
   const safeText = text || '';
   // Improved URL regex: capture http(s) and www. and stop at common delimiters, avoid \b that breaks on '.'
-  const urlRe = /((?:https?:\/\/|www\.)[^\s"'<>\)]+)/gim;
+  const urlRe = /((?:https?:\/\/|www\.)[^\s"'<>)]+)/gim;
   const emailRe = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b/g;
   const phoneRe = /\b(?:\+?\d{1,3}[ .-]?)?(?:\(?\d{1,4}\)?[ .-]?)?\d{1,4}[ .-]?\d{1,4}(?:[ .-]?\d{1,9})?\b/g;
 
@@ -258,7 +258,7 @@ function initAccordions() {
     if (!header.querySelector('.chev')) {
       const chev = document.createElement('span');
       chev.className = 'chev';
-      chev.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>';
+      chev.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linej[...]';
       header.appendChild(chev);
     }
     header.setAttribute('role', 'button');
