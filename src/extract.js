@@ -28,17 +28,18 @@ export function getTopKeywords(text, limit = 10) {
 
 export function extract(text) {
   const safeText = text || '';
-  const urlRe = /\b((?:https?:\/\/|www\.)\S+?)\b/gim;
+  const urlRe = /((?:https?:\/\/|www\.)[^\s"'<>)]+)/gim;
   const emailRe = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b/g;
   const phoneRe = /\b(?:\+?\d{1,3}[ .-]?)?(?:\(?\d{1,4}\)?[ .-]?)?\d{1,4}[ .-]?\d{1,4}(?:[ .-]?\d{1,9})?\b/g;
+  const hashtagRe = /#[A-Za-z][A-Za-z0-9_]{1,}/g;
 
-  const urls = [...safeText.matchAll(urlRe)].map(m => sanitizeUrl(m[0]));
-  const emails = [...safeText.matchAll(emailRe)].map(m => m[0]);
-  const phones = [...safeText.matchAll(phoneRe)].map(m => m[0]).filter(p => p.replace(/\D/g, '').length >= 7);
+  const urls = [...new Set([...safeText.matchAll(urlRe)].map(m => sanitizeUrl(m[0])))];
+  const emails = [...new Set([...safeText.matchAll(emailRe)].map(m => m[0]))];
+  const phones = [...new Set([...safeText.matchAll(phoneRe)].map(m => m[0]).filter(p => p.replace(/\D/g, '').length >= 7))];
+  const hashtags = [...new Set([...safeText.matchAll(hashtagRe)].map(m => m[0]))];
   const keywords = getTopKeywords(safeText, 10);
 
-  return { urls, emails, phones, keywords };
+  return { urls, emails, phones, keywords, hashtags };
 }
 
-// Default export for CommonJS interop if needed
 export default { sanitizeUrl, getTopKeywords, extract };

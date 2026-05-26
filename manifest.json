@@ -1,0 +1,24 @@
+{
+  "manifest_version": 3,
+  "name": "QuickLook Extractor",
+  "version": "0.1.0",
+  "description": "Instantly extract links, emails, phone numbers, hashtags, and keywords from any text.",
+  "permissions": ["contextMenus", "storage"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "index.html",
+    "default_title": "Open QuickLook",
+    "default_icon": {
+      "16": "assets/quicklook-icon.png",
+      "48": "assets/quicklook-icon.png",
+      "128": "assets/quicklook-icon.png"
+    }
+  },
+  "icons": {
+    "16": "assets/quicklook-icon.png",
+    "48": "assets/quicklook-icon.png",
+    "128": "assets/quicklook-icon.png"
+  }
+}
