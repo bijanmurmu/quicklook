@@ -868,6 +868,7 @@ body.is-extension-popup {
   overflow-x: hidden;
   margin: 0;
   padding: 0;
+  display: block; /* Fixes flexbox vertical centering clipping overflow */
 }
 
 body.is-extension-popup .container {

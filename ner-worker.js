@@ -9,10 +9,22 @@ import { pipeline, env } from './vendor/transformers.min.js';
 // Single WASM thread is fine for extension context
 env.backends.onnx.wasm.numThreads = 1;
 
-// Models are cached in IndexedDB across sessions
-env.useBrowserCache = true;
+let cacheAvailable = typeof caches !== 'undefined';
+env.useBrowserCache = cacheAvailable;
 
 let nerPipeline = null;
+
+async function loadPipeline() {
+  return await pipeline('token-classification', 'Xenova/bert-base-NER', {
+    aggregation_strategy: 'simple',
+    progress_callback: (p) => {
+      if (p.status === 'progress' && p.total) {
+        const pct = Math.round((p.loaded / p.total) * 100);
+        self.postMessage({ type: 'progress', pct, file: p.file });
+      }
+    },
+  });
+}
 
 self.addEventListener('message', async (e) => {
   const { type, text } = e.data;
@@ -21,25 +33,19 @@ self.addEventListener('message', async (e) => {
   try {
     if (!nerPipeline) {
       self.postMessage({ type: 'status', message: 'Loading NER model… (first run only)' });
-
-      nerPipeline = await pipeline(
-        'token-classification',
-        'Xenova/bert-base-NER',
-        {
-          aggregation_strategy: 'simple',
-          progress_callback: (p) => {
-            if (p.status === 'progress' && p.total) {
-              const pct = Math.round((p.loaded / p.total) * 100);
-              self.postMessage({ type: 'progress', pct, file: p.file });
-            }
-          },
+      try {
+        nerPipeline = await loadPipeline();
+      } catch (err) {
+        if (err.message?.includes('Browser cache is not available') || String(err).includes('Browser cache is not available')) {
+          env.useBrowserCache = false;
+          nerPipeline = await loadPipeline();
+        } else {
+          throw err;
         }
-      );
+      }
     }
 
     self.postMessage({ type: 'status', message: 'Analysing text…' });
-
-    // BERT has a 512-token limit; trim gracefully
     const results = await nerPipeline(text.slice(0, 1200));
     self.postMessage({ type: 'done', entities: results });
 
