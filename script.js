@@ -681,7 +681,24 @@ window.toggleFormatting = toggleFormatting;
 
 // ── Initialize ──────────────────────────────────────────────────────────
 
+function initEventListeners() {
+  const btn = (id, fn) => document.getElementById(id)?.addEventListener('click', fn);
+  btn('extractBtn', extractText);
+  btn('clearBtn', clearAll);
+  btn('formatToggleBtn', toggleFormatting);
+  btn('exportJsonBtn', exportJSON);
+  btn('exportCsvBtn', exportCSV);
+
+  document.querySelectorAll('.section-copy').forEach(el => {
+    el.addEventListener('click', (e) => {
+      const target = e.currentTarget.getAttribute('data-copy-target');
+      if (target) copySection(target);
+    });
+  });
+}
+
 function init() {
+  initEventListeners();
   initAccordions();
   initDragDrop();
   initAutoExtract();

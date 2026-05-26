@@ -55,24 +55,24 @@
 
     <div class="controls" role="group" aria-label="Actions">
       <div class="toolbar">
-        <button id="extractBtn" class="control-btn primary" onclick="extractText()">
+        <button id="extractBtn" class="control-btn primary">
           <span class="icon"><i data-lucide="zap"></i></span>
           <span class="label">Extract</span>
         </button>
-        <button id="clearBtn" class="control-btn" onclick="clearAll()">
+        <button id="clearBtn" class="control-btn">
           <span class="icon"><i data-lucide="trash-2"></i></span>
           <span class="label">Clear</span>
         </button>
-        <button id="formatToggleBtn" class="control-btn" onclick="toggleFormatting()" title="Standardize extracted data formats">
+        <button id="formatToggleBtn" class="control-btn" title="Standardize extracted data formats">
           <span class="icon"><i data-lucide="wand-2"></i></span>
           <span class="label">Format</span>
         </button>
         <div class="spacer"></div>
-        <button id="exportJsonBtn" class="control-btn" onclick="exportJSON()">
+        <button id="exportJsonBtn" class="control-btn">
           <span class="icon"><i data-lucide="file-json"></i></span>
           <span class="label">JSON</span>
         </button>
-        <button id="exportCsvBtn" class="control-btn" onclick="exportCSV()">
+        <button id="exportCsvBtn" class="control-btn">
           <span class="icon"><i data-lucide="file-spreadsheet"></i></span>
           <span class="label">CSV</span>
         </button>
@@ -88,7 +88,7 @@
           <span class="title">Links</span>
           <span class="count" aria-hidden="true"></span>
           <div class="section-controls">
-            <button class="section-copy" onclick="copySection('links')" title="Copy all links">Copy all</button>
+            <button class="section-copy" data-copy-target="links" title="Copy all links">Copy all</button>
           </div>
         </h2>
         <ul></ul>
@@ -100,7 +100,7 @@
           <span class="title">Emails</span>
           <span class="count" aria-hidden="true"></span>
           <div class="section-controls">
-            <button class="section-copy" onclick="copySection('emails')" title="Copy all emails">Copy all</button>
+            <button class="section-copy" data-copy-target="emails" title="Copy all emails">Copy all</button>
           </div>
         </h2>
         <ul></ul>
@@ -112,7 +112,7 @@
           <span class="title">Phone Numbers</span>
           <span class="count" aria-hidden="true"></span>
           <div class="section-controls">
-            <button class="section-copy" onclick="copySection('phones')" title="Copy all phones">Copy all</button>
+            <button class="section-copy" data-copy-target="phones" title="Copy all phones">Copy all</button>
           </div>
         </h2>
         <ul></ul>
@@ -124,7 +124,7 @@
           <span class="title">Hashtags</span>
           <span class="count" aria-hidden="true"></span>
           <div class="section-controls">
-            <button class="section-copy" onclick="copySection('hashtags')" title="Copy all hashtags">Copy all</button>
+            <button class="section-copy" data-copy-target="hashtags" title="Copy all hashtags">Copy all</button>
           </div>
         </h2>
         <ul></ul>
@@ -136,7 +136,7 @@
           <span class="title">Social Profiles</span>
           <span class="count" aria-hidden="true"></span>
           <div class="section-controls">
-            <button class="section-copy" onclick="copySection('socials')" title="Copy all profiles">Copy all</button>
+            <button class="section-copy" data-copy-target="socials" title="Copy all profiles">Copy all</button>
           </div>
         </h2>
         <ul></ul>
@@ -148,7 +148,7 @@
           <span class="title">Top Keywords</span>
           <span class="count" aria-hidden="true"></span>
           <div class="section-controls">
-            <button class="section-copy" onclick="copySection('keywords')" title="Copy all keywords">Copy all</button>
+            <button class="section-copy" data-copy-target="keywords" title="Copy all keywords">Copy all</button>
           </div>
         </h2>
         <ul></ul>
