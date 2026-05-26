@@ -44,6 +44,6 @@ self.addEventListener('message', async (e) => {
     self.postMessage({ type: 'done', entities: results });
 
   } catch (err) {
-    self.postMessage({ type: 'error', message: err.message });
+    self.postMessage({ type: 'error', message: err.message || String(err) });
   }
 });

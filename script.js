@@ -539,9 +539,17 @@ function runNER() {
   if (!text.trim()) { showToast('⚠️ Enter some text first'); return; }
 
   if (!nerWorker) {
+    if (window.location.protocol === 'file:') {
+      showToast('❌ NER requires a local server or Chrome Extension mode (file:// blocked)');
+      return;
+    }
     nerWorker = new Worker('ner-worker.js', { type: 'module' });
     nerWorker.onmessage  = handleNERMessage;
-    nerWorker.onerror    = err => { showToast('❌ NER failed: ' + err.message); setNERStatus(''); };
+    nerWorker.onerror    = err => { 
+      const msg = err.message || 'Worker failed to load. Check console for CORS or 404 errors.';
+      showToast('❌ NER failed: ' + msg); 
+      setNERStatus(''); 
+    };
   }
 
   const btn = document.getElementById('nerRunBtn');
