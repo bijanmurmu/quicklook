@@ -621,10 +621,16 @@ li.empty-item:hover {
   backdrop-filter: blur(8px);
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  pointer-events: auto;
+  gap: 10px;
   animation: toastIn 0.35s ease forwards;
+  pointer-events: auto;
   max-width: 320px;
+}
+
+.toast svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
 }
 
 .toast.toast-out {
@@ -750,15 +756,15 @@ footer .social a:hover {
   background: var(--surface-hover);
 }
 
-footer .social img {
+footer .social svg {
   width: 22px;
   height: 22px;
-  filter: brightness(90%);
-  transition: filter var(--transition-fast);
+  color: var(--text-muted);
+  transition: color var(--transition-fast);
 }
 
-footer .social a:hover img {
-  filter: brightness(130%);
+footer .social a:hover svg {
+  color: var(--text);
 }
 
 /* --- Accessibility --- */

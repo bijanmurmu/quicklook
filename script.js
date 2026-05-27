@@ -305,12 +305,38 @@ function download(content, filename, type) {
 function showToast(message, duration = 2500) {
   const container = document.getElementById('toastContainer');
   if (!container) return;
+
+  const emojiMap = {
+    '⚠️': 'alert-triangle',
+    '❌': 'x-circle',
+    '⚡': 'zap',
+    '✨': 'sparkles',
+    '📋': 'clipboard-copy',
+    '🗑️': 'trash-2',
+    '📥': 'file-down',
+    '📄': 'file-text',
+    '✅': 'check-circle'
+  };
+
+  let iconName = 'info';
+  let cleanMessage = message;
+  for (const [emoji, icon] of Object.entries(emojiMap)) {
+    if (message.includes(emoji)) {
+      iconName = icon;
+      cleanMessage = message.replace(emoji, '').trim();
+      break;
+    }
+  }
+
   const toast = document.createElement('div');
   toast.className = 'toast';
-  toast.textContent = message;
+  toast.innerHTML = `<i data-lucide="${iconName}"></i> <span>${cleanMessage}</span>`;
   container.appendChild(toast);
+
+  if (window.lucide) lucide.createIcons({ root: toast });
+
   const announce = document.getElementById('sr-announce');
-  if (announce) announce.textContent = message;
+  if (announce) announce.textContent = cleanMessage;
   setTimeout(() => {
     toast.classList.add('toast-out');
     toast.addEventListener('animationend', () => toast.remove());
