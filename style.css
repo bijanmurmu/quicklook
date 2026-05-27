@@ -756,15 +756,15 @@ footer .social a:hover {
   background: var(--surface-hover);
 }
 
-footer .social img {
+footer .social svg {
   width: 22px;
   height: 22px;
-  filter: brightness(90%);
-  transition: filter var(--transition-fast);
+  color: var(--text-muted);
+  transition: color var(--transition-fast);
 }
 
-footer .social a:hover img {
-  filter: brightness(130%);
+footer .social a:hover svg {
+  color: var(--text);
 }
 
 /* --- Accessibility --- */
