@@ -927,7 +927,16 @@ body.is-extension-popup .container {
 
 /* Dedicated UI features for the Extension Popup */
 body.is-extension-popup .site-header {
-  display: none;
+  margin: 0 0 0.5rem 0;
+}
+
+body.is-extension-popup .brand {
+  font-size: 1.5rem;
+}
+
+body.is-extension-popup .tagline {
+  font-size: 0.85rem;
+  margin-top: 0.2rem;
 }
 
 body.is-extension-popup .drop-overlay {
