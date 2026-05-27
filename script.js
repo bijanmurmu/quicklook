@@ -1,3 +1,4 @@
+let formattingEnabled = false;
 /* ========================================================================
    QuickLook — Main Application Script
    Phases 1-4: Extraction, Extension, Advanced Regex, NER, Highlighting
@@ -94,7 +95,6 @@ function extractLib(text) {
 // ── Section State Management ────────────────────────────────────────────
 
 const SECTIONS = ['links', 'emails', 'phones', 'hashtags', 'socials', 'keywords', 'crypto', 'ips'];
-let formattingEnabled = false;
 
 function updateSectionStates() {
   SECTIONS.forEach(id => {
@@ -254,7 +254,7 @@ function clearAll() {
     const ul = document.querySelector(`#${id} ul`);
     if (ul) ul.innerHTML = '';
   });
-  const nerCount = document.querySelector('#entities .count');
+  const nerCount = document.querySelector('#ai-insights .count');
   if (nerCount) nerCount.textContent = '';
 
   // Clear highlights
@@ -611,7 +611,6 @@ function initHighlighting() {
 
 // ── Phase 4: Formatting Toggle ──────────────────────────────────────────
 
-let formattingEnabled = false;
 
 function toggleFormatting() {
   formattingEnabled = !formattingEnabled;
@@ -728,10 +727,10 @@ function renderEntities(entities) {
 
   const total = people.length + orgs.length + locs.length + misc.length;
   showToast(`✨ Found ${total} named entities`);
-  const countEl = document.querySelector('#entities .count');
+  const countEl = document.querySelector('#ai-insights .count');
   if (countEl) countEl.textContent = total || '';
 
-  const section = document.getElementById('entities');
+  const section = document.getElementById('ai-insights');
   
   if (window.lucide) lucide.createIcons();
 }
@@ -843,4 +842,6 @@ if (document.readyState === 'loading') {
 } else {
   init();
 }
+
+
 
