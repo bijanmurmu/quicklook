@@ -528,7 +528,8 @@ function toggleSection(section) {
 }
 
 function updateAccordionMode() {
-  const small = window.innerWidth <= 700;
+  const isExtension = document.body.classList.contains('is-extension-popup');
+  const small = window.innerWidth <= 700 && !isExtension;
   document.querySelectorAll('.result-section').forEach(section => {
     if (small && !section.classList.contains('collapsed') && !section.classList.contains('expanded')) {
       section.classList.add('collapsed');
