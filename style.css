@@ -907,7 +907,7 @@ footer .social a:hover svg {
    Chrome Extension Popup Styles
    ======================================================================== */
 body.is-extension-popup {
-  width: 600px;
+  width: 450px;
   max-width: 800px;
   height: 600px;
   overflow-y: auto;
@@ -922,7 +922,7 @@ body.is-extension-popup .container {
   border-radius: 0;
   box-shadow: none;
   min-height: 100%;
-  padding: 12px;
+  padding: 16px;
 }
 
 /* Dedicated UI features for the Extension Popup */
@@ -935,7 +935,7 @@ body.is-extension-popup .brand {
 }
 
 body.is-extension-popup .tagline {
-  font-size: 0.85rem;
+  font-size: 0.95rem;
   margin-top: 0.2rem;
 }
 
@@ -950,7 +950,6 @@ body.is-extension-popup .textarea-wrapper {
 body.is-extension-popup .textarea-wrapper textarea {
   min-height: 120px;
   height: 120px;
-  font-size: 0.9rem;
   padding: 12px;
 }
 
