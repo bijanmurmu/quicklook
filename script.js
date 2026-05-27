@@ -783,6 +783,24 @@ function initExtensionContext() {
           chrome.storage.local.remove('quicklookPendingText');
           chrome.action?.setBadgeText?.({ text: '' });
           setTimeout(() => { extractText(); showToast('⚡ Extracted from Context Menu'); }, 100);
+        } else if (chrome.tabs && chrome.scripting) {
+          chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+            if (tabs && tabs.length > 0 && tabs[0].url && !tabs[0].url.startsWith('chrome://')) {
+              chrome.scripting.executeScript({
+                target: { tabId: tabs[0].id },
+                func: () => document.body.innerText
+              }, (res) => {
+                if (res && res[0] && res[0].result) {
+                  const textarea = document.getElementById('inputText');
+                  if (textarea && !textarea.value.trim()) {
+                    textarea.value = res[0].result;
+                    updateCounter();
+                    setTimeout(() => { extractText(); showToast('🌐 Auto-Scraped Page Text'); }, 100);
+                  }
+                }
+              });
+            }
+          });
         }
       });
     }
@@ -842,6 +860,7 @@ if (document.readyState === 'loading') {
 } else {
   init();
 }
+
 
 
 

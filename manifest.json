@@ -3,7 +3,7 @@
   "name": "QuickLook Extractor",
   "version": "0.3.0",
   "description": "Instantly extract links, emails, phones, hashtags, social profiles & named entities from any text. Runs 100% in-browser — zero backend, zero tracking.",
-  "permissions": ["contextMenus", "storage"],
+  "permissions": ["contextMenus", "storage", "activeTab", "scripting"],
   "background": {
     "service_worker": "background.js"
   },

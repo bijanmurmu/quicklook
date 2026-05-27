@@ -922,6 +922,20 @@ body.is-extension-popup .container {
   border-radius: 0;
   box-shadow: none;
   min-height: 100%;
+  padding: 12px;
+}
+
+/* Dedicated UI features for the Extension Popup */
+body.is-extension-popup .site-header {
+  display: none;
+}
+
+body.is-extension-popup .drop-overlay {
+  display: none !important;
+}
+
+body.is-extension-popup .textarea-wrapper {
+  margin-top: 1rem;
 }
 
 /* ========================================================================
