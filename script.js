@@ -243,7 +243,6 @@ function clearAll() {
   });
   const nerCount = document.querySelector('#entities .count');
   if (nerCount) nerCount.textContent = '';
-  document.getElementById('entities')?.classList.add('empty');
 
   // Clear highlights
   const hc = document.getElementById('highlightContent');
