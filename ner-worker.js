@@ -13,17 +13,19 @@ let cacheAvailable = typeof caches !== 'undefined';
 env.useBrowserCache = cacheAvailable;
 
 let nerPipeline = null;
+let sumPipeline = null;
+let senPipeline = null;
 
-async function loadPipeline() {
-  return await pipeline('token-classification', 'Xenova/bert-base-NER', {
-    aggregation_strategy: 'simple',
-    progress_callback: (p) => {
-      if (p.status === 'progress' && p.total) {
-        const pct = Math.round((p.loaded / p.total) * 100);
-        self.postMessage({ type: 'progress', pct, file: p.file });
-      }
-    },
-  });
+async function loadPipelines() {
+  const pCb = p => {
+    if (p.status === 'progress' && p.total) {
+      const pct = Math.round((p.loaded / p.total) * 100);
+      self.postMessage({ type: 'progress', pct, file: p.file });
+    }
+  };
+  if (!nerPipeline) nerPipeline = await pipeline('token-classification', 'Xenova/bert-base-NER', { aggregation_strategy: 'simple', progress_callback: pCb });
+  if (!senPipeline) senPipeline = await pipeline('text-classification', 'Xenova/distilbert-base-uncased-finetuned-sst-2-english', { progress_callback: pCb });
+  if (!sumPipeline) sumPipeline = await pipeline('summarization', 'Xenova/distilbart-cnn-6-6', { progress_callback: pCb });
 }
 
 self.addEventListener('message', async (e) => {
@@ -31,24 +33,34 @@ self.addEventListener('message', async (e) => {
   if (type !== 'run') return;
 
   try {
-    if (!nerPipeline) {
-      self.postMessage({ type: 'status', message: 'Loading NER model… (first run only)' });
+    if (!nerPipeline || !senPipeline || !sumPipeline) {
+      self.postMessage({ type: 'status', message: 'Loading AI models… (~250MB, first run only)' });
       try {
-        nerPipeline = await loadPipeline();
+        await loadPipelines();
       } catch (err) {
-        if (err.message?.includes('Browser cache is not available') || String(err).includes('Browser cache is not available')) {
+        if (String(err).includes('Browser cache is not available')) {
           env.useBrowserCache = false;
-          nerPipeline = await loadPipeline();
-        } else {
-          throw err;
-        }
+          await loadPipelines();
+        } else throw err;
       }
     }
 
-    self.postMessage({ type: 'status', message: 'Analysing text…' });
-    const results = await nerPipeline(text.slice(0, 1200));
-    self.postMessage({ type: 'done', entities: results });
+    self.postMessage({ type: 'status', message: 'Analyzing sentiment…' });
+    const sentiment = await senPipeline(text.slice(0, 512));
 
+    self.postMessage({ type: 'status', message: 'Extracting entities…' });
+    const entities = await nerPipeline(text.slice(0, 1200));
+
+    self.postMessage({ type: 'status', message: 'Generating summary…' });
+    const sumInput = text.length > 200 ? text : text.repeat(4);
+    const summary = await sumPipeline(sumInput.slice(0, 1000), { max_new_tokens: 40, min_new_tokens: 10 });
+
+    self.postMessage({ 
+      type: 'done', 
+      entities, 
+      sentiment: sentiment[0], 
+      summary: summary[0].summary_text 
+    });
   } catch (err) {
     self.postMessage({ type: 'error', message: err.message || String(err) });
   }

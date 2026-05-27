@@ -49,7 +49,11 @@
       </div>
       <label class="auto-extract-option">
         <input type="checkbox" id="autoExtractToggle" />
-        Auto-extract on paste
+        Auto-extract
+      </label>
+      <label class="auto-extract-option" title="Mask emails, phones, and names with [REDACTED]">
+        <input type="checkbox" id="piiRedactToggle" />
+        PII Redaction
       </label>
     </div>
 
@@ -62,6 +66,10 @@
         <button id="clearBtn" class="control-btn">
           <span class="icon"><i data-lucide="trash-2"></i></span>
           <span class="label">Clear</span>
+        </button>
+        <button id="historyBtn" class="control-btn" title="Restore previous extractions">
+          <span class="icon"><i data-lucide="history"></i></span>
+          <span class="label">History</span>
         </button>
         <button id="formatToggleBtn" class="control-btn" title="Standardize extracted data formats">
           <span class="icon"><i data-lucide="wand-2"></i></span>
@@ -76,6 +84,13 @@
           <span class="icon"><i data-lucide="file-spreadsheet"></i></span>
           <span class="label">CSV</span>
         </button>
+      </div>
+    </div>
+
+    <div class="filter-bar">
+      <div class="filter-input-wrapper">
+        <i data-lucide="search"></i>
+        <input type="text" id="filterInput" placeholder="Filter extracted results..." aria-label="Filter results" />
       </div>
     </div>
 
@@ -154,19 +169,43 @@
         <ul></ul>
       </section>
 
-      <!-- Named Entities (Phase 3 — NLP) -->
-      <section id="entities" class="result-section entities-section">
+      <section id="crypto" class="result-section">
         <h2 class="section-header">
-          <span class="section-icon"><i data-lucide="brain"></i></span>
-          <span class="title">Named Entities</span>
+          <span class="section-icon"><i data-lucide="bitcoin"></i></span>
+          <span class="title">Crypto Wallets</span>
           <span class="count" aria-hidden="true"></span>
           <div class="section-controls">
-            <button class="ner-run-btn" id="nerRunBtn" title="Run AI-powered entity recognition (downloads model on first use)">
+            <button class="section-copy" data-copy-target="crypto" title="Copy all crypto addresses">Copy all</button>
+          </div>
+        </h2>
+        <ul></ul>
+      </section>
+
+      <section id="ips" class="result-section">
+        <h2 class="section-header">
+          <span class="section-icon"><i data-lucide="globe"></i></span>
+          <span class="title">IP Addresses</span>
+          <span class="count" aria-hidden="true"></span>
+          <div class="section-controls">
+            <button class="section-copy" data-copy-target="ips" title="Copy all IP addresses">Copy all</button>
+          </div>
+        </h2>
+        <ul></ul>
+      </section>
+
+      <!-- Advanced AI (Phase 5 — NLP) -->
+      <section id="ai-insights" class="result-section entities-section">
+        <h2 class="section-header">
+          <span class="section-icon"><i data-lucide="brain"></i></span>
+          <span class="title">AI Insights</span>
+          <span class="count" aria-hidden="true"></span>
+          <div class="section-controls">
+            <button class="ner-run-btn" id="nerRunBtn" title="Run AI summarization, sentiment & entity recognition (downloads model on first use)">
               <i data-lucide="sparkles"></i> Analyse
             </button>
           </div>
         </h2>
-        <p class="ner-hint">Extracts People, Organizations & Locations using an in-browser AI model. Runs 100% locally.</p>
+        <p class="ner-hint">Runs 100% locally. Extracts Entities, summarizes text, and detects sentiment.</p>
         <div class="ner-status-bar" id="nerStatusBar" style="display:none">
           <div class="ner-spinner"></div>
           <span id="nerStatusText"></span>
@@ -174,6 +213,18 @@
         <div class="ner-progress-wrap" id="nerProgressWrap" style="display:none">
           <div class="ner-progress-bar" id="nerProgressBar"></div>
         </div>
+
+        <div class="ai-cards" id="aiCards" style="display:none">
+          <div class="ai-card summary-card">
+            <h4><i data-lucide="align-left"></i> Summary</h4>
+            <p id="aiSummaryText">Generating summary...</p>
+          </div>
+          <div class="ai-card sentiment-card">
+            <h4><i data-lucide="smile"></i> Sentiment</h4>
+            <div id="aiSentimentBadge" class="sentiment-badge neutral">Neutral</div>
+          </div>
+        </div>
+
         <div class="entity-groups">
           <div class="entity-group" id="ner-people">
             <div class="entity-group-label"><i data-lucide="user"></i> People</div>
@@ -211,6 +262,7 @@
 
   <script src="vendor/lucide.min.js"></script>
   <script src="vendor/libphonenumber-min.js"></script>
+  <script src="vendor/mammoth.browser.min.js"></script>
   <script src="script.js"></script>
 </body>
 </html>

@@ -106,6 +106,46 @@ body {
   font-weight: 300;
 }
 
+/* --- Filter Bar --- */
+.filter-bar {
+  margin: 1.5rem 0;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.filter-input-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 300px;
+}
+
+.filter-input-wrapper i {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  color: var(--text-dim);
+}
+
+#filterInput {
+  width: 100%;
+  padding: 0.6rem 1rem 0.6rem 2.2rem;
+  border-radius: 20px;
+  border: 1px solid var(--card-border);
+  background: var(--bg-1);
+  color: var(--text);
+  font-size: 0.9rem;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+#filterInput:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(29, 185, 84, 0.15);
+}
+
 /* --- Header Controls (theme toggle) --- */
 .header-controls {
   display: flex;
@@ -900,12 +940,68 @@ body.is-extension-popup .container {
 }
 
 /* ========================================================================
-   Phase 3 — Named Entities (NER) Section
+   Phase 5 - AI Insights (Summarization, Sentiment, NER)
    ======================================================================== */
 .entities-section {
   grid-column: 1 / -1; /* full width across the grid */
 }
 
+/* AI Cards (Summary & Sentiment) */
+.ai-cards {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.ai-card {
+  background: var(--surface-hover);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-sm);
+  padding: 1rem;
+}
+
+.ai-card h4 {
+  margin: 0 0 0.5rem 0;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ai-card h4 i {
+  width: 16px;
+  height: 16px;
+}
+
+#aiSummaryText {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--text);
+  margin: 0;
+}
+
+.sentiment-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.4rem 1rem;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 0.5rem;
+}
+
+.sentiment-badge.neutral { background: var(--surface); color: var(--text-muted); border: 1px solid var(--card-border); }
+.sentiment-badge.positive { background: rgba(29, 185, 84, 0.1); color: #1db954; border: 1px solid rgba(29, 185, 84, 0.2); }
+.sentiment-badge.negative { background: rgba(226, 33, 52, 0.1); color: #e22134; border: 1px solid rgba(226, 33, 52, 0.2); }
+
+/* --- Phase 3 — Named Entities (NER) Section --- */
 .ner-hint {
   font-size: 0.82rem;
   color: var(--text-dim);

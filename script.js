@@ -93,7 +93,8 @@ function extractLib(text) {
 
 // ── Section State Management ────────────────────────────────────────────
 
-const SECTIONS = ['links', 'emails', 'phones', 'hashtags', 'socials', 'keywords'];
+const SECTIONS = ['links', 'emails', 'phones', 'hashtags', 'socials', 'keywords', 'crypto', 'ips'];
+let formattingEnabled = false;
 
 function updateSectionStates() {
   SECTIONS.forEach(id => {
@@ -120,11 +121,20 @@ async function extractText() {
     return;
   }
 
-  const { urls, emails, phones, socials, keywords, hashtags } = extractLib(text);
+  const { urls, emails, phones, socials: _socials, keywords: _keywords, hashtags } = extractLib(text);
 
   // Apply formatting if toggle is on
   const fUrls   = formattingEnabled ? urls.map(formatUrl) : urls;
   const fPhones = formattingEnabled ? phones.map(formatPhone) : phones;
+  const socials  = _socials;
+  const keywords = _keywords;
+  
+  // Phase 5 Extractors
+  const cryptoMatch = text.match(/\b(0x[a-fA-F0-9]{40}|[13][a-km-zA-HJ-NP-Z1-9]{25,34}|bc1[a-z0-9]{39,59})\b/g);
+  const crypto = [...new Set(cryptoMatch || [])];
+  
+  const ipsMatch = text.match(/\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b/g);
+  const ips = [...new Set(ipsMatch || [])];
 
   fillList('links',    fUrls,   true, true);
   fillList('emails',   emails,  true, true);
@@ -132,13 +142,16 @@ async function extractText() {
   fillList('hashtags', hashtags, true, false);
   fillList('socials',  socials, true, true);
   fillList('keywords', keywords, false, false);
+  fillList('crypto',   crypto,  true, false);
+  fillList('ips',      ips,     true, false);
 
   updateSectionStates();
   renderHighlights();
+  saveHistory(text);
 
   if (window.lucide) lucide.createIcons();
 
-  const total = urls.length + emails.length + phones.length + socials.length + hashtags.length + keywords.length;
+  const total = fUrls.length + emails.length + fPhones.length + socials.length + hashtags.length + keywords.length + crypto.length + ips.length;
   showToast(`✅ Extracted ${total} items`);
 }
 
@@ -288,7 +301,7 @@ function escapeCsv(s) {
 
 function collectResults() {
   const read = id => [...document.querySelectorAll(`#${id} ul li:not(.empty-item)`)].map(li => li.textContent.trim()).filter(Boolean);
-  return { links: read('links'), emails: read('emails'), phones: read('phones'), hashtags: read('hashtags'), socials: read('socials'), keywords: read('keywords') };
+  return { links: read('links'), emails: read('emails'), phones: read('phones'), hashtags: read('hashtags'), socials: read('socials'), keywords: read('keywords'), crypto: read('crypto'), ips: read('ips') };
 }
 
 function download(content, filename, type) {
@@ -344,6 +357,40 @@ function showToast(message, duration = 2500) {
   setTimeout(() => { if (announce) announce.textContent = ''; }, duration + 500);
 }
 
+// ── History, Filters, Shortcuts ─────────────────────────────────────────
+
+function saveHistory(text) {
+  let history = JSON.parse(localStorage.getItem('quicklook-history') || '[]');
+  if (history[0] === text) return;
+  history.unshift(text);
+  localStorage.setItem('quicklook-history', JSON.stringify(history.slice(0, 10)));
+}
+
+function restoreHistory() {
+  const history = JSON.parse(localStorage.getItem('quicklook-history') || '[]');
+  if (history.length === 0) { showToast('⚠️ No history'); return; }
+  document.getElementById('inputText').value = history[0];
+  updateCounter();
+  extractText();
+}
+
+function initFilter() {
+  const filter = document.getElementById('filterInput');
+  filter?.addEventListener('input', e => {
+    const val = e.target.value.toLowerCase();
+    document.querySelectorAll('.result-section').forEach(s => {
+      s.style.display = s.id.toLowerCase().includes(val) ? '' : 'none';
+    });
+  });
+}
+
+function initShortcuts() {
+  document.addEventListener('keydown', e => {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'k') { e.preventDefault(); document.getElementById('filterInput')?.focus(); }
+    if ((e.ctrlKey || e.metaKey) && e.key === 'h') { e.preventDefault(); restoreHistory(); }
+  });
+}
+
 // ── Counter ─────────────────────────────────────────────────────────────
 
 function updateCounter() {
@@ -379,13 +426,51 @@ function initDragDrop() {
     const allowedExts = ['.txt','.csv','.json','.md','.html','.htm','.js','.css','.xml','.log'];
     const ext = '.' + file.name.split('.').pop().toLowerCase();
 
+    if (ext === '.docx' && window.mammoth) {
+      const reader = new FileReader();
+      reader.onload = ev => {
+        mammoth.extractRawText({arrayBuffer: ev.target.result}).then(result => {
+          if (textarea) { textarea.value = result.value; updateCounter(); }
+          showToast(`📄 Loaded: ${file.name}`);
+          if (document.getElementById('autoExtractToggle')?.checked) extractText();
+        }).catch(() => showToast('❌ Failed to parse DOCX'));
+      };
+      reader.readAsArrayBuffer(file);
+      return;
+    }
+
+    if (ext === '.pdf') {
+      const reader = new FileReader();
+      reader.onload = async ev => {
+        try {
+          const pdfjsLib = await import('./vendor/pdf.min.mjs');
+          pdfjsLib.GlobalWorkerOptions.workerSrc = './vendor/pdf.worker.min.mjs';
+          const pdf = await pdfjsLib.getDocument({ data: new Uint8Array(ev.target.result) }).promise;
+          let text = '';
+          for (let i = 1; i <= pdf.numPages; i++) {
+            const page = await pdf.getPage(i);
+            const content = await page.getTextContent();
+            text += content.items.map(item => item.str).join(' ') + '\n\n';
+          }
+          if (textarea) { textarea.value = text; updateCounter(); }
+          showToast(`📄 Loaded: ${file.name}`);
+          if (document.getElementById('autoExtractToggle')?.checked) extractText();
+        } catch (err) {
+          console.error(err);
+          showToast('❌ Failed to parse PDF');
+        }
+      };
+      reader.readAsArrayBuffer(file);
+      return;
+    }
+
     if (['text/plain','text/csv','text/html','text/markdown','application/json','text/javascript'].includes(file.type) || allowedExts.includes(ext)) {
       const reader = new FileReader();
       reader.onload = ev => {
         if (textarea) {
           textarea.value = ev.target.result;
           updateCounter();
-          showToast(`📁 Loaded: ${file.name}`);
+          showToast(`📄 Loaded: ${file.name}`);
           if (document.getElementById('autoExtractToggle')?.checked) extractText();
         }
       };
@@ -583,7 +668,7 @@ function runNER() {
 }
 
 function handleNERMessage(e) {
-  const { type, message, pct, file, entities } = e.data;
+  const { type, message, pct, file, entities, summary, sentiment } = e.data;
   const btn   = document.getElementById('nerRunBtn');
   const bar   = document.getElementById('nerStatusBar');
   const prog  = document.getElementById('nerProgressWrap');
@@ -596,12 +681,26 @@ function handleNERMessage(e) {
     bar?.style.setProperty('display', 'flex');
     prog?.style.setProperty('display', 'block');
     if (progB) progB.style.width = `${pct}%`;
-    setNERStatus(`Downloading model… ${pct}%${file ? ' — ' + file.split('/').pop() : ''}`);
+    setNERStatus(`Downloading model... ${pct}%`);
   } else if (type === 'done') {
     bar?.style.setProperty('display', 'none');
     prog?.style.setProperty('display', 'none');
     if (progB) progB.style.width = '0%';
     if (btn) btn.disabled = false;
+    
+    const aiCards = document.getElementById('aiCards');
+    if (aiCards) aiCards.style.display = 'grid';
+    const sumText = document.getElementById('aiSummaryText');
+    if (sumText) sumText.textContent = summary || 'No summary generated.';
+    const sentBadge = document.getElementById('aiSentimentBadge');
+    if (sentBadge && sentiment) {
+      const isPos = sentiment.label === 'POSITIVE';
+      const isNeg = sentiment.label === 'NEGATIVE';
+      const label = isPos ? 'Positive' : (isNeg ? 'Negative' : 'Neutral');
+      const cls = isPos ? 'positive' : (isNeg ? 'negative' : 'neutral');
+      sentBadge.textContent = `${label} (${Math.round(sentiment.score * 100)}%)`;
+      sentBadge.className = `sentiment-badge ${cls}`;
+    }
     renderEntities(entities);
   } else if (type === 'error') {
     bar?.style.setProperty('display', 'none');
@@ -609,6 +708,7 @@ function handleNERMessage(e) {
     showToast('❌ NER error: ' + message);
   }
 }
+
 
 function setNERStatus(msg) {
   const el = document.getElementById('nerStatusText');
@@ -711,6 +811,7 @@ function initEventListeners() {
   const btn = (id, fn) => document.getElementById(id)?.addEventListener('click', fn);
   btn('extractBtn', extractText);
   btn('clearBtn', clearAll);
+  btn('historyBtn', restoreHistory);
   btn('formatToggleBtn', toggleFormatting);
   btn('exportJsonBtn', exportJSON);
   btn('exportCsvBtn', exportCSV);
@@ -725,6 +826,8 @@ function initEventListeners() {
 
 function init() {
   initEventListeners();
+  initFilter();
+  initShortcuts();
   initAccordions();
   initDragDrop();
   initAutoExtract();
@@ -740,3 +843,4 @@ if (document.readyState === 'loading') {
 } else {
   init();
 }
+
