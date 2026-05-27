@@ -1,134 +1,106 @@
-# 🔍 QuickLook — Universal Text Extractor & Chrome Extension
+<div align="center">
+  
+# 🚀 QuickLook
+**Universal Text Extractor & AI Toolkit**
 
-> Extract links, emails, phone numbers, hashtags, social profiles and named entities from any text — instantly, privately, and entirely in your browser.
+Extract links, emails, crypto wallets, and named entities from any text or document—instantly, privately, and 100% in your browser.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-![Manifest V3](https://img.shields.io/badge/Chrome-Manifest%20V3-blue)
-![Tests](https://img.shields.io/badge/tests-8%20passing-brightgreen)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
+[![Manifest V3](https://img.shields.io/badge/Chrome-Manifest%20V3-blue)](#)
+[![Zero Backend](https://img.shields.io/badge/Privacy-Zero%20Backend-purple)](#)
+
+</div>
 
 ---
 
-## ✨ Features
+## 🌟 Features
 
-### Core Extraction
+QuickLook is a completely client-side toolkit that processes everything locally using WebAssembly and JavaScript. Your data never leaves your device.
+
+### 🧠 Advanced AI (NLP)
 | Feature | Description |
 |---|---|
-| 🔗 **Links** | Finds all URLs including `www.` prefixed links |
-| 📧 **Emails** | Standard formats **and** obfuscated ones (`name [at] domain dot com`) |
-| 📞 **Phone Numbers** | International formats powered by `libphonenumber-js` |
-| #️⃣ **Hashtags** | Extracts `#tags` from social-style content |
-| 👥 **Social Profiles** | `twitter.com/`, `x.com/`, `linkedin.com/in/`, `instagram.com/`, `@handles` |
-| 🔑 **Top Keywords** | Most frequent meaningful words (stopwords filtered) |
+| **Summarization** | Distills long text into concise summaries using `distilbart-cnn-6-6` |
+| **Sentiment Analysis** | Detects Positive, Negative, or Neutral sentiment using `distilbert-base-uncased` |
+| **Named Entities (NER)** | Extracts **People**, **Organizations**, **Locations**, and **Misc** entities |
 
-### AI-Powered (Phase 3)
+*Note: AI pipelines run via [Transformers.js](https://github.com/xenova/transformers.js). The models (~250MB) are downloaded securely from HuggingFace on first use and permanently cached in your browser's local Cache API.*
+
+### 📄 Universal Document Parsing
 | Feature | Description |
 |---|---|
-| 🧠 **Named Entity Recognition** | Extracts **People**, **Organizations**, and **Locations** using an in-browser BERT model via [Transformers.js](https://github.com/xenova/transformers.js) — 100% local, zero data sent anywhere |
+| **PDF Extraction** | Drag and drop `.pdf` files. Powered by Mozilla's `pdf.js` |
+| **Word Documents** | Drag and drop `.docx` files. Powered by `mammoth.js` |
+| **Standard Files** | Supports `.txt`, `.csv`, `.json`, `.md`, and `.html` |
 
-### Quality of Life
+### 🔎 Core Extraction
 | Feature | Description |
 |---|---|
-| 🎨 **Live Highlighting** | Matches are colour-coded in the textarea as you type — blue for URLs, red for emails, green for hashtags, purple for @handles |
-| ✨ **Format Toggle** | Normalises phone numbers to international format and upgrades `http://` → `https://` |
-| 🌙 **Dark / Light Mode** | Theme persists across sessions via `localStorage` |
-| 📁 **Drag & Drop** | Drop `.txt`, `.csv`, `.json`, `.md`, `.html` files directly onto the page |
-| 📋 **Auto-Extract on Paste** | Optional toggle that runs extraction the moment you paste |
-| 📥 **Export** | Download all results as **JSON** or **CSV** |
-| ⌨️ **Keyboard Shortcut** | `Ctrl/Cmd + Enter` to extract |
+| **Crypto Wallets** | Automatically finds **BTC** and **ETH** addresses |
+| **IP Addresses** | Extracts **IPv4** addresses |
+| **Links & Emails** | Standard formats and obfuscated emails (`name [at] domain dot com`) |
+| **Phones** | International formats powered by `libphonenumber-js` |
+| **Socials & Tags** | Extracts `#tags` and `@handles` |
 
-### Chrome Extension (Phase 1)
-| Feature | Description |
-|---|---|
-| 🖱️ **Context Menu** | Highlight text on any webpage → right-click → **"Extract with QuickLook"** → open popup to see results instantly |
-| 🔔 **Badge Indicator** | Extension icon shows a badge when context-menu text is waiting |
-| 🔒 **Privacy-First** | Only `contextMenus` and `storage` permissions — no host permissions, no network requests |
+### ⚡ Quality of Life
+- **Live Filtering**: Instantly search and filter across all extracted items.
+- **Local History**: Your last 10 sessions are securely saved in `localStorage`.
+- **Keyboard Shortcuts**: `Ctrl+K` to search, `Ctrl+H` to restore history, `Ctrl+Enter` to extract.
+- **Chrome Extension**: Highlight text on any page -> right-click -> **"Extract with QuickLook"**.
 
 ---
 
 ## 🚀 Getting Started
 
-### As a Web App
+### As a Web App (Local Development)
 
 ```bash
+# 1. Clone the repository
 git clone https://github.com/bijanmurmu/quicklook.git
 cd quicklook
+
+# 2. Install dependencies
 npm install
-npm run vendor:build   # copies Lucide, libphonenumber-js, Transformers.js to vendor/
-npm start              # opens http://127.0.0.1:5500
+
+# 3. Build the local vendor bundle (CRITICAL)
+npm run vendor:build
+
+# 4. Start the local server
+npx serve .
 ```
+
+> **Note:** The `vendor/` directory is ignored by Git. You must run `npm run vendor:build` after cloning to bundle the AI pipelines and PDF parsers!
 
 ### As a Chrome Extension
 
-1. Clone and install as above
-2. Open Chrome → `chrome://extensions/`
-3. Enable **Developer mode** (top right toggle)
-4. Click **Load unpacked** → select the `quicklook/` folder
-5. Pin the QuickLook icon to your toolbar
-
-> **Note:** The `vendor/` directory is excluded from git (`.gitignore`). Always run `npm run vendor:build` after a fresh clone.
+1. Clone and install dependencies as above.
+2. Open Chrome and navigate to `chrome://extensions/`.
+3. Enable **Developer mode** (top right).
+4. Click **Load unpacked** and select the `quicklook/` directory.
 
 ---
 
-## 🛠️ Developer Workflow
+## 🛠️ Architecture (Zero-Backend)
 
-```bash
-npm install            # install all dev dependencies
-npm run vendor:build   # regenerate vendor/ bundles from node_modules
-npm test               # run Jest test suite (8 tests)
-npm run lint           # ESLint
-npm run format         # Prettier
-npm start              # local HTTP server on port 5500
-```
-
-### Running Tests
-
-```
-PASS tests/extract.test.js
-  extract()
-    ✓ extracts urls, emails, phones, hashtags, socials and keywords
-    ✓ extracts obfuscated emails
-    ✓ extracts international phones using libphonenumber-js
-    ✓ extracts social media links
-    ✓ handles empty input
-    ✓ deduplicates results
-  getTopKeywords()
-    ✓ returns most frequent words
-  sanitizeUrl()
-    ✓ prefixes www with http
-
-Tests: 8 passed, 8 total
-```
+QuickLook embraces a strict zero-backend philosophy:
+- **UI & Logic:** Vanilla HTML/CSS/JS (`script.js`) for maximum performance and extension compatibility.
+- **Workers:** AI inferences are offloaded to Web Workers (`ner-worker.js`) so the UI never freezes.
+- **Dependencies:** All external libraries (Lucide, PDF.js, Transformers.js) are bundled into the `vendor/` folder via `npm run vendor:build` so the Chrome extension can run entirely offline without violating CSP rules.
 
 ---
 
-## 📁 Project Structure
+## 🤝 Contributing
 
-```
-quicklook/
-├── index.html              # Main UI (also the Extension popup)
-├── script.js               # All browser logic (Phases 1-4)
-├── style.css               # Design system & styles
-├── background.js           # Extension service worker (context menu)
-├── ner-worker.js           # Web Worker for NER (Transformers.js)
-├── manifest.json           # Chrome Extension Manifest V3
-├── src/
-│   └── extract.js          # Pure extraction functions (ESM, for testing)
-├── tests/
-│   └── extract.test.js     # Jest test suite
-├── vendor/                 # ⚠️ git-ignored — run npm run vendor:build
-│   ├── lucide.min.js
-│   ├── libphonenumber-min.js
-│   └── transformers.min.js
-└── assets/                 # Icons and images
-```
+We welcome contributions! Whether it's adding new regex extractors, improving the UI, or fixing bugs, we'd love your help.
+
+Please read our [Contributing Guidelines](CONTRIBUTING.md) and our [Code of Conduct](CODE_OF_CONDUCT.md) before submitting a Pull Request.
 
 ---
 
-## 🔒 Privacy
+## 🔒 Security & Privacy
 
-QuickLook is **zero-backend**. Every feature — including the AI Named Entity Recognition — runs entirely in your browser using WebAssembly. No text you paste is ever sent to a server.
-
-The only external network request made is the **one-time download** of the BERT NER model (~80 MB) from Hugging Face on first use. The model is then cached locally in your browser's IndexedDB and never downloaded again.
+QuickLook processes all text locally. If you discover a security vulnerability, please refer to our [Security Policy](SECURITY.md) to report it confidentially.
 
 ---
 

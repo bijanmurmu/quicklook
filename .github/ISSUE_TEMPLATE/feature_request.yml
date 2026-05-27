@@ -1,0 +1,28 @@
+name: Feature Request
+description: Suggest an idea for QuickLook
+title: "[FEATURE]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to suggest a new feature or extractor!
+  - type: textarea
+    id: description
+    attributes:
+      label: Describe the feature
+      description: A clear and concise description of what you want to achieve.
+    validations:
+      required: true
+  - type: textarea
+    id: usecase
+    attributes:
+      label: Use Case
+      description: How would this feature improve QuickLook?
+    validations:
+      required: true
+  - type: textarea
+    id: regex
+    attributes:
+      label: Regex Suggestion (Optional)
+      description: If you are suggesting a new data extraction type, providing a regex snippet helps immensely!
