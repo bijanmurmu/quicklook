@@ -1179,3 +1179,25 @@ body.is-extension-popup .controls-section {
   transform: none;
   box-shadow: none;
 }
+/* ========================================================================
+   Custom Scrollbar (Green Theme)
+   ======================================================================== */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-card);
+  border-radius: var(--radius-sm);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--accent);
+  border-radius: var(--radius-sm);
+  border: 2px solid var(--bg-card);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-2);
+}
