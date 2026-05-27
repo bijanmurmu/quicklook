@@ -237,7 +237,7 @@ function clearAll() {
     if (countEl) countEl.textContent = '';
   });
   // Clear NER too
-  ['ner-people', 'ner-orgs', 'ner-locs'].forEach(id => {
+  ['ner-people', 'ner-orgs', 'ner-locs', 'ner-misc'].forEach(id => {
     const ul = document.querySelector(`#${id} ul`);
     if (ul) ul.innerHTML = '';
   });
@@ -577,7 +577,6 @@ function handleNERMessage(e) {
     if (progB) progB.style.width = '0%';
     if (btn) btn.disabled = false;
     renderEntities(entities);
-    showToast(`🧠 Found ${entities.length} named entities`);
   } else if (type === 'error') {
     bar?.style.setProperty('display', 'none');
     if (btn) btn.disabled = false;
@@ -594,12 +593,15 @@ function renderEntities(entities) {
   const people = [...new Set(entities.filter(e => e.entity_group === 'PER').map(e => e.word))];
   const orgs   = [...new Set(entities.filter(e => e.entity_group === 'ORG').map(e => e.word))];
   const locs   = [...new Set(entities.filter(e => e.entity_group === 'LOC').map(e => e.word))];
+  const misc   = [...new Set(entities.filter(e => e.entity_group === 'MISC').map(e => e.word))];
 
   fillEntityGroup('ner-people', people);
   fillEntityGroup('ner-orgs',   orgs);
   fillEntityGroup('ner-locs',   locs);
+  fillEntityGroup('ner-misc',   misc);
 
-  const total = people.length + orgs.length + locs.length;
+  const total = people.length + orgs.length + locs.length + misc.length;
+  showToast(`✨ Found ${total} named entities`);
   const countEl = document.querySelector('#entities .count');
   if (countEl) countEl.textContent = total || '';
 
