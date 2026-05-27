@@ -604,8 +604,7 @@ function renderEntities(entities) {
   if (countEl) countEl.textContent = total || '';
 
   const section = document.getElementById('entities');
-  section?.classList.toggle('empty', total === 0);
-
+  
   if (window.lucide) lucide.createIcons();
 }
 
